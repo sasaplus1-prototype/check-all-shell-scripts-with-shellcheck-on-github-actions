@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '**/*.sh'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
