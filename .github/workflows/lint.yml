@@ -1,0 +1,26 @@
+name: lint
+
+on:
+  push:
+    paths:
+      - '**/*.sh'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: asia/tokyo
+
+jobs:
+  lint-shell-scripts:
+    name: lint shell scripts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "scripts=$(git ls-files '*.sh')" >> "$GITHUB_OUTPUT"
+        id: get-scripts
+      - uses: docker://koalaman/shellcheck:stable
+        with:
+          args: ${{ steps.get-scripts.outputs.scripts }}
